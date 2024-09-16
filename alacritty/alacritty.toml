@@ -1,0 +1,17 @@
+inmport = [
+  "~/.config/alacritty/themes/rose-pine.toml"
+]
+
+[window]
+opacity = 0.8
+padding.x = 10
+padding.y = 10
+decorations = "Full"
+#decorations_theme_variant = "Light" # "Dark"
+
+[font]
+normal.family = "JetBrainsMono Nerd Font"
+bold.family = "JetBrainsMono Nerd Font"
+italic.family = "JetBrainsMono Nerd Font"
+bold_italic.family = "JetBrainsMono Nerd Font"
+size = 11.0
