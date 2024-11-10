@@ -1,0 +1,29 @@
+# onedark
+text-color       = #abb2bf
+prompt-color     = #e06c75
+selection-color  = #e5c07b
+background-color = #282c34
+
+anchor = top
+width = 100%
+height = 40%
+horizontal = false
+font-size = 10
+prompt-text = "  "
+prompt-padding = 4
+font = Hack Nerd Font
+outline-width = 0
+border-width = 0
+#min-input-width = 20
+#num-results = 20
+result-spacing = 6
+
+padding-top = 0
+padding-bottom = 0
+padding-left = 0
+padding-right = 0
+
+hide-cursor = false
+
+# scale = true
+clip-to-padding = true
