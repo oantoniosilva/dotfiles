@@ -1,17 +1,29 @@
+[general]
 inmport = [
-  "~/.config/alacritty/themes/rose-pine.toml"
+  "~/.config/alacritty/themes/tokyo_night.toml"
 ]
 
 [window]
 opacity = 0.8
+
+[window.padding]
 padding.x = 10
 padding.y = 10
-decorations = "Full"
+
+#decorations = "Full"
 #decorations_theme_variant = "Light" # "Dark"
 
+[font.normal]
+family = "Hack Nerd Font"
+style = "Italic"
+#[font]
+#normal.family = "JetBrainsMono Nerd Font"
+#bold.family = "JetBrainsMono Nerd Font"
+#italic.family = "JetBrainsMono Nerd Font"
+#bold_italic.family = "JetBrainsMono Nerd Font"
+
 [font]
-normal.family = "JetBrainsMono Nerd Font"
-bold.family = "JetBrainsMono Nerd Font"
-italic.family = "JetBrainsMono Nerd Font"
-bold_italic.family = "JetBrainsMono Nerd Font"
 size = 11.0
+
+[selection]
+save_to_clipboard = true
