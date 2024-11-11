@@ -1,5 +1,5 @@
 [general]
-inmport = [
+import = [
   "~/.config/alacritty/themes/tokyo_night.toml"
 ]
 
@@ -7,8 +7,8 @@ inmport = [
 opacity = 0.8
 
 [window.padding]
-padding.x = 10
-padding.y = 10
+x = 10
+y = 10
 
 #decorations = "Full"
 #decorations_theme_variant = "Light" # "Dark"
