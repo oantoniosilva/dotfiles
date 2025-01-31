@@ -1,50 +1,60 @@
-[settings]
-throttle-ms = 100
-throttle-limit = 5
+;==============================
+;     POLYBAR 2022 / rphl 
+;   for MX LINUX with BSPWM
+;==============================
+
+[colors]
+;They range from transp to opaque : 0, 1, 2,.., 9, A, B, C, D, E, F
+background  =   #1e1e2e
+
+foreground  =   #cdd6f4
+border      =   #565f89
+info        =   #cdd6f4
+data        =   #a6adc8
+green       =   #a6e3a1 
+red         =   #f38ba8
 
 [bar/top]
 width = 100%
-height = 32
-background = #282c34
-foreground = #abb2bf
-spacing = 4
-underline-size = 4
-overline-size = 4
-padding = 2
-#font-0 = Bitstream Vera Sans:pixelsize=9;2
-#font-1 = JetBrains:pixelsize=9;2
-font-0 = JetBrains Mono:pixelsize=9;2
-font-1 = Fira Code:pixelsize=9;2
-dpi-x = 96
-dpi-y = 96
+height = 20pt
+radius = 0
+line-size = 2pt
+border-bottom-size = 1pt
+border-color = ${colors.border}
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+padding-left = 1
+padding-right = 1
+module-margin = 0
+
+;;;;;;;;;;;;;;;; FONTS ;;;;;;;;;;;;;;;;
+font-0 = JetBrainsMono Nerd Font:size=10:weight=medium;3
+font-1 = JetBrainsMono Nerd Font:size=11:weight=bold;3
+;font-0 = NotoSansDisplay Nerd Font:size=10:weight=medium;3
+;font-1 = NotoSans Nerd Font:size=11:weight=bold;3
+
+;;;;;;;;;;;;;;;; POSITION MODULES ;;;;;;;;;;;;;;;;;;
 modules-left = i3
-modules-center = xwindow 
-modules-right = xbacklight alsa pulseaudio xkeyboard eth temperature day clock powermenu
+modules-center = hour date 
+modules-right = update filesystem temperature cpu eth pulseaudio xkeyboard session
+cursor-click = pointer
+cursor-scroll = ns-resize
+enable-ipc = true
 
-[module/xwindow]
-type = internal/xwindow 
-label = %{A3:bspc node -c:} %title:0:48:...% %{A}
-format-overline = #282c34
-format-underline = #282c34
-format-foreground = #98c379
-label-padding = 2
+;;;;;;;;;;;;;;;; TRAY CONFIG ;;;;;;;;;;;;;;;;
+tray-position = right
+;tray-detached = false
+;tray-maxsize = 20
+;tray-background = ${colors.background}
+;tray-offset-x = 0
+;tray-offset-y = 0
+;tray-padding = 4
+;tray-scale = 1.0
 
-[module/xkeyboard]
-type = internal/xkeyboard
-blacklist-0 = num lock
 
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-format-prefix-underline = ${colors.secondary}
-
-label-layout = %layout%
-label-layout-underline = ${colors.secondary}
-
-label-indicator-padding = 2
-label-indicator-margin = 1
-label-indicator-background = ${colors.secondary}
-label-indicator-underline = ${colors.secondary}
-
+;;;;;;;;;;;;;;;; i3WM MODULE ;;;;;;;;;;;;;;;;
 
 [module/i3]
 type = internal/i3
@@ -70,191 +80,154 @@ label-empty-foreground = #5c6370
 label-empty-underline = #282c34
 label-empty-overline = #282c34
 
-[module/mpd]
-type = internal/mpd
-format-online = <label-song>  <icon-prev> <icon-stop> <toggle> <icon-next>
 
-icon-prev = 
-icon-stop = 
-icon-play = 
-icon-pause = 
-icon-next = 
 
-label-song-maxlen = 25
-label-song-ellipsis = true
+;;;;;;;;;;;;;;;; CENTER MODULES ;;;;;;;;;;;;;;;;
 
-[module/xbacklight]
-type = internal/xbacklight
+[module/hour]
+type = internal/date
+interval = 5
+label-foreground = ${colors.foreground}
+date = %l:%M %p
+label = %date%
+label-padding = 0
+label-font = 1
 
-format = <label> <bar>
-label = BL
+[module/date]
+type = custom/script
+interval = 5
+label-foreground = ${colors.border}
+format = <label>
+exec = "LC_TIME="en_us_utf8" date +"  %a, %b %-d""
+label-padding = 1
+label-font = 1
+click-left = gsimplecal
 
-bar-width = 10
-bar-indicator = |
-bar-indicator-foreground = #fff
-bar-indicator-font = 2
-bar-fill = ─
-bar-fill-font = 2
-bar-fill-foreground = #9f78e1
-bar-empty = ─
-bar-empty-font = 2
-bar-empty-foreground = ${colors.foreground-alt}
+;;;;;;;;;;;;;;; RIGHT MODULES ;;;;;;;;;;;;;;;;
 
-[module/backlight-acpi]
-inherit = module/xbacklight
-type = internal/backlight
-card = intel_backlight
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
 
-[module/cpu]
-type = internal/cpu
-interval = 2
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #f90000
-label = %percentage:2%%
+label-layout = " 󰘳 %layout%" 
+label-layout-padding = 1
+label-layout-foreground = ${colors.data}
+;format-foreground = ${colors.foreground}
+
+
+;;;;;;;;;;;;;;;; RIGHT MODULES ;;;;;;;;;;;;;;;;
+
+[module/lock]
+type = internal/xkeyboard
+;ignore :
+format-margin = 2
+blacklist-0 = num lock
+blacklist-1 = scroll lock
+format = <label-indicator>
+label-indicator-padding = 1
+indicator-icon-0 = caps lock;-CL;+CL
+label-indicator-off =
+label-indicator-on = "  Caps "
+format-foreground = ${colors.background}
+format-background = ${colors.red}
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+mount-0 = /
+label-mounted-foreground = ${colors.data}
+label-mounted = %{A1:notify-send -u low "Disk space" "`df -h /home | tail -1 | awk '{print $4}'`":}  %percentage_used%%%{A}
+label-mounted-padding = 1
+label-unmounted = %mountpoint% not mounted
 
 [module/memory]
 type = internal/memory
 interval = 2
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #4bffdc
-label = %percentage_used%%
+label = " %used:2%" 
+label-padding = 1
+label-foreground = ${colors.data}
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+warn-percentage = 95
+format = <label> 
+label = CPU %percentage%%
+label-foreground = ${colors.data}
+label-warn = Cpu %percentage%%
+label-warn-foreground = ${colors.red}
+label-padding = 1
+
+[network-base]
+type = internal/network
+interval = 5
+format-connected = <label-connected>
+format-disconnected = <label-disconnected>
+label-disconnected = %{A1:kitty -e nmtui &:}%ifname% disconnected%{A}
+label-disconnected-foreground = ${colors.red}
+label-disconnected-padding = 1
 
 [module/eth]
+inherit = network-base
 type = internal/network
-interface = enp0s31f6
+interface = enp4s0
 interval = 3.0
 
-format-connected-underline = #55aa55
-format-connected-prefix = " "
-format-connected-prefix-foreground = ${colors.foreground-alt}
-label-connected = %local_ip%
-
-format-disconnected =
-;format-disconnected = <label-disconnected>
-;format-disconnected-underline = ${self.format-connected-underline}
-;label-disconnected = %ifname% disconnected
-;label-disconnected-foreground = ${colors.foreground-alt}
-
-[module/day]
-type = internal/date
-time = %a %e
 format = <label>
-label = %time%
-label-margin = 2
-format-background = #3e4452
-format-overline = #282c34
-format-underline = #282c34
+label-connected = "   %local_ip% "
+label-connected-foreground = ${colors.data}
 
-[module/clock]
-type = internal/date
-time = %H:%M
-format = <label>
-label = %time%
-label-margin = 2
-format-background = #98c379
-format-foreground = #282c34
-format-overline = #282c34
-format-underline = #282c34
+format-disconnected = <label-disconnected>
+label-disconnected = %ifname% disconnected
+label-disconnected-foreground = ${colors.red}
+
+[module/update]
+;apt-get dist-upgrade -s --quiet=2 | grep ^Inst | wc -l
+type = custom/script
+exec = apt-get dist-upgrade -s --quiet=2 | grep ^Inst | wc -l
+interval = 1000
+label = Updates: %output%
+format-prefix = "  "
+format-prefix-foreground = ${colors.green}
+label-foreground = ${colors.green}
+label-padding = 1
 
 [module/pulseaudio]
 type = internal/pulseaudio
+use-ui-max = true
+interval = 5
+reverse-scroll = false
 
-format-volume = <label-volume> <bar-volume>
-format-volume-padding = 4
-format-muted-padding = 4
-label-volume = VOL %percentage%%
-label-volume-foreground = ${root.foreground}
+label-volume = "  %percentage%%"
+label-volume-foreground = ${colors.data}  
+label-muted = 󰟎 muted
+label-muted-foreground = ${colors.red}
 
-label-muted = 🔇 muted
-label-muted-foreground = #e06c75
+label-volume-0 = 
+label-volume-1 = 
+label-volume-2 = 
 
-bar-volume-width = 20
-bar-volume-foreground-0 = #98c379
-bar-volume-foreground-1 = #98c379
-bar-volume-foreground-2 = #98c379
-bar-volume-foreground-3 = #98c379
-bar-volume-foreground-4 = #98c379
-bar-volume-foreground-5 = #e5c07b
-bar-volume-foreground-6 = #e06c75
-bar-volume-gradient = false
-bar-volume-indicator = ─
-bar-volume-indicator-foreground = #abb2bf
-bar-volume-fill = ─
-bar-volume-empty = ─
-bar-volume-empty-foreground = ${colors.foreground-alt}
+click-right = pavucontrol
 
-[module/alsa]
-type = internal/alsa
+;;;;;;;;;;;;;;;; SESSION MODULES ;;;;;;;;;;;;;;;;
 
-format-volume = <label-volume> <bar-volume>
-label-volume = VOL
-label-volume-foreground = ${root.foreground}
+[module/redshift]
+type = custom/text
+content = "󰃟"
+click-left = ~/bin/redshift-on
+click-right = ~/bin/redshift-off
+content-foreground = ${colors.info}
+content-padding = 1
+content-font = 2
 
-format-muted-prefix = " "
-format-muted-foreground = ${colors.foreground-alt}
-label-muted = sound muted
+[module/session]
+type = custom/text
+click-left = ~/.local/bin/dmenu-i3-logout
+content = ""
+content-foreground = ${colors.info}
+content-padding = 1
+content-font = 2
 
-bar-volume-width = 10
-bar-volume-foreground-0 = #55aa55
-bar-volume-foreground-1 = #55aa55
-bar-volume-foreground-2 = #55aa55
-bar-volume-foreground-3 = #55aa55
-bar-volume-foreground-4 = #55aa55
-bar-volume-foreground-5 = #f5a70a
-bar-volume-foreground-6 = #ff5555
-bar-volume-gradient = false
-bar-volume-indicator = ─
-bar-volume-indicator-foreground = #abb2bf
-bar-volume-fill = ─
-bar-volume-empty = ─
-bar-volume-empty-foreground = ${colors.foreground-alt}
-
-[module/temperature]
-type = internal/temperature
-thermal-zone = 0
-warn-temperature = 60
-
-format = <ramp> <label>
-format-underline = #f50a4d
-format-warn = <ramp> <label-warn>
-format-warn-underline = ${self.format-underline}
-
-label = %temperature-c%
-label-warn = %temperature-c%
-label-warn-foreground = ${colors.secondary}
-
-ramp-0 = 
-ramp-1 = 
-ramp-2 = 
-ramp-foreground = ${colors.foreground-alt}
-
-[module/powermenu]
-type = custom/menu
-
-expand-right = true
-
-format-spacing = 1
-
-label-open = 
-label-open-foreground = ${colors.secondary}
-label-close =  cancel
-label-close-foreground = ${colors.secondary}
-label-separator = |
-label-separator-foreground = ${colors.foreground-alt}
-
-menu-0-0 = reboot
-menu-0-0-exec = menu-open-1
-menu-0-1 = power off
-menu-0-1-exec = menu-open-2
-
-menu-1-0 = cancel
-menu-1-0-exec = menu-open-0
-menu-1-1 = reboot
-menu-1-1-exec = sudo reboot
-
-menu-2-0 = power off
-menu-2-0-exec = sudo poweroff
-menu-2-1 = cancel
-menu-2-1-exec = menu-open-0
+[settings]
+screenchange-reload = true
+pseudo-transparency = true
